@@ -18,6 +18,10 @@ def sigmoid(Z):
 
     return A, cache
 
+def softmax(Z):
+    A = np.exp(Z - np.max(Z, axis=0, keepdims=True))
+    A /= np.sum(A, axis=0, keepdims=True)
+    return A, Z
 
 def relu(Z):
     """

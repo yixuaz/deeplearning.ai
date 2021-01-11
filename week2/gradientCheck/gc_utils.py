@@ -8,7 +8,8 @@ def dictionary_to_vector(parameters):
     count = 0
     shapes = {}
     for key in sorted(parameters):
-
+        if parameters[key] is None:
+            continue
         # flatten parameter
         shapes[key] = parameters[key].shape
         new_vector = np.reshape(parameters[key], (-1, 1))
@@ -30,6 +31,9 @@ def vector_to_dictionary(theta, keys, shapes):
     parameters = {}
     idx = 0
     for key in sorted(keys):
+        if not(key in shapes):
+            parameters[key] = None
+            continue
         res = 1 if (len(shapes[key]) == 1) else shapes[key][1]
         next = idx + shapes[key][0] * res
         parameters[key] = theta[idx:next].reshape(shapes[key])
@@ -43,7 +47,8 @@ def gradients_to_vector(gradients):
     """
     count = 0
     for key in sorted(gradients.keys()):
-        if not (key.startswith('dW') or key.startswith('db') or key.startswith('dgamma') or key.startswith('dbeta')):
+        if not (key.startswith('dW') or key.startswith('db') or key.startswith('dg'))\
+                or gradients[key] is None:
             continue
         # flatten parameter
         new_vector = np.reshape(gradients[key], (-1, 1))
